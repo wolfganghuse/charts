@@ -52,6 +52,10 @@ sed "s/${PATCH_1}/${PATCH_1_FIX}/g" charts/serving/templates/serving-core-1.yaml
 yq -i eval 'select(.kind != "CustomResourceDefinition")' charts/serving/templates/serving-core-temp.yaml
 yq -i eval 'select(.kind != "CustomResourceDefinition")' charts/eventing/templates/eventing-temp.yaml
 yq -i eval 'select(.kind == "ConfigMap") |= (.data._example = null | .data |= with_entries(select(.key != "_example"))) | select(.)' charts/serving/templates/serving-core-temp.yaml
+
+# Remove configmap autoscaler and features from serving-core (WIP)
+yq -i eval 'select(.kind == "ConfigMap") |= (.data._example = null | .data |= with_entries(select(.key != "_example"))) | select(.)' charts/serving/templates/serving-core-temp.yaml
+
 # Remove default knative gateway
 yq -i eval 'select((.kind != "Gateway") or (.metadata.name != "knative-ingress-gateway"))' charts/serving/templates/net-istio-temp.yaml
 # Remove examples from config-istio
